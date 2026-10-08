@@ -72,6 +72,7 @@ export interface FigmaNode {
 	id: string;
 	type: string;
 	name?: string;
+	pluginData?: Record<string, string>;
 	visible?: boolean;
 	locked?: boolean;
 	characters?: string;

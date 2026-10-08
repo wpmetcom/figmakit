@@ -24,11 +24,19 @@ function isHorizontal(node: FigmaNode): boolean {
 
 export function convertFigmaNodeToGutenberg(node: FigmaNode): GutenbergBlock[] {
 	if (node.visible === false) return [];
-	if (
-		/(button|btn|cta|browse|shop)/i.test(node.name ?? '') &&
-		node.children?.some(({ type }) => type === 'TEXT')
-	)
-		return [createButtonsBlock(node)];
+	const explicitRole = node.pluginData?.['figmakit:role'];
+	const directChildren =
+		node.children?.filter((child) => child.visible !== false) ?? [];
+	const looksLikeButton =
+		explicitRole === 'button' ||
+		(directChildren.length === 1 &&
+			directChildren[0]?.type === 'TEXT' &&
+			Boolean(node.fills?.some((fill) => fill.type === 'SOLID')) &&
+			Boolean(
+				(node.frame?.paddingTop ?? node.paddingTop ?? 0) ||
+				(node.frame?.paddingLeft ?? node.paddingLeft ?? 0)
+			));
+	if (looksLikeButton) return [createButtonsBlock(node)];
 	if (node.type === 'TEXT') {
 		const size =
 			typeof node.text?.fontSize === 'number'

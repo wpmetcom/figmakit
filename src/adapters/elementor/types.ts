@@ -66,10 +66,42 @@ export interface ImageWidgetSettings extends Record<string, unknown> {
 	align?: string;
 	space?: ElementorDimension;
 	image_border_radius?: ElementorBox;
+	image_border_border?: string;
+	image_border_width?: ElementorBox;
+	image_border_color?: string;
+	opacity?: ElementorDimension;
+}
+
+export interface TextEditorWidgetSettings extends Record<string, unknown> {
+	editor?: string;
+	align?: string;
+	text_color?: string;
+	typography_typography?: string;
+	typography_font_family?: string;
+	typography_font_size?: ElementorDimension;
+	typography_font_weight?: string;
+	typography_font_style?: string;
+	typography_line_height?: ElementorDimension;
+	typography_letter_spacing?: ElementorDimension;
+}
+
+export interface ButtonWidgetSettings extends Record<string, unknown> {
+	text?: string;
+	link?: ElementorLink;
+	align?: string;
+	button_text_color?: string;
+	background_color?: string;
+	border_radius?: ElementorBox;
+	typography_typography?: string;
+	typography_font_size?: ElementorDimension;
+	typography_font_family?: string;
+	typography_font_weight?: string;
+	typography_line_height?: ElementorDimension;
+	typography_letter_spacing?: ElementorDimension;
+	text_padding?: ElementorBox;
 	border_border?: string;
 	border_width?: ElementorBox;
 	border_color?: string;
-	opacity?: ElementorDimension;
 }
 
 export interface TextEditorWidgetSettings extends Record<string, unknown> {

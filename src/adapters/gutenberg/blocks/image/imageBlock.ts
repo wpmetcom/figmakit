@@ -10,7 +10,7 @@ export function createImageBlock(node: FigmaNode): GutenbergBlock {
 		attributes: image.attributes,
 		serializedAttributes: Object.fromEntries(
 			Object.entries(image.attributes).filter(
-				([key]) => !['url', 'alt', 'width', 'height'].includes(key)
+				([key]) => !['url', 'alt'].includes(key)
 			)
 		),
 		innerBlocks: [],

@@ -48,14 +48,14 @@ export function mapFigmaImageToImage(
 
 	const borderColor = firstSolidColor(node.strokes);
 	if (borderColor && node.strokeWeight) {
-		settings.border_border = 'solid';
-		settings.border_width = box(
+		settings.image_border_border = 'solid';
+		settings.image_border_width = box(
 			node.strokeWeight,
 			node.strokeWeight,
 			node.strokeWeight,
 			node.strokeWeight
 		);
-		settings.border_color = borderColor;
+		settings.image_border_color = borderColor;
 	}
 	if (node.opacity !== undefined && node.opacity < 1) {
 		settings.opacity = dimension(node.opacity, '');

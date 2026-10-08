@@ -10,6 +10,11 @@ export function createColumnsBlock(
 	return {
 		name: 'core/columns',
 		attributes,
+		serializedAttributes: Object.fromEntries(
+			Object.entries(attributes).filter(
+				([key, value]) => key !== 'isStackedOnMobile' || value !== true
+			)
+		),
 		innerBlocks: columns,
 		sourceNodeId: node.id,
 		render: (innerMarkup) =>

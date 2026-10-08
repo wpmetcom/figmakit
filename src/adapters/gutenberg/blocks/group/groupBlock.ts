@@ -6,7 +6,7 @@ export function createGroupBlock(
 ): GutenbergBlock {
 	return {
 		name: 'core/group',
-		attributes: { layout: { type: 'constrained' } },
+		attributes: {},
 		innerBlocks: blocks,
 		sourceNodeId: node.id,
 		render: (inner) =>

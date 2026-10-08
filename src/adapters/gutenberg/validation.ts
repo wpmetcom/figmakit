@@ -49,12 +49,45 @@ export function validateGutenbergDocument(
 				sourceNodeId: block.sourceNodeId,
 			});
 		if (
+			block.name === 'core/buttons' &&
+			block.innerBlocks.some((child) => child.name !== 'core/button')
+		)
+			diagnostics.push({
+				code: 'gutenberg.invalid-buttons-child',
+				message: 'core/buttons may contain only core/button blocks.',
+				severity: 'error',
+				sourceNodeId: block.sourceNodeId,
+			});
+		if (
 			block.name === 'core/image' &&
 			typeof block.attributes.url !== 'string'
 		)
 			diagnostics.push({
 				code: 'gutenberg.image-url-invalid',
 				message: 'core/image requires a string URL.',
+				severity: 'error',
+				sourceNodeId: block.sourceNodeId,
+			});
+		if (
+			block.name === 'core/image' &&
+			!/^(https?:|data:image\/)/.test(String(block.attributes.url ?? ''))
+		)
+			diagnostics.push({
+				code: 'gutenberg.image-url-unusable',
+				message:
+					'core/image URL must be HTTP(S) or embedded image data.',
+				severity: 'error',
+				sourceNodeId: block.sourceNodeId,
+			});
+		if (
+			block.name === 'core/heading' &&
+			(typeof block.attributes.level !== 'number' ||
+				block.attributes.level < 1 ||
+				block.attributes.level > 6)
+		)
+			diagnostics.push({
+				code: 'gutenberg.heading-level-invalid',
+				message: 'core/heading level must be between 1 and 6.',
 				severity: 'error',
 				sourceNodeId: block.sourceNodeId,
 			});

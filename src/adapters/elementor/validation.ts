@@ -2,6 +2,7 @@ import type { ConversionDiagnostic, ValidationResult } from '@/core/targets';
 import type { ElementorElement, ElementorPage } from './types';
 
 const elementIdPattern = /^[a-f0-9]{8}$/;
+const supportedWidgets = new Set(['heading', 'image', 'button', 'text-editor']);
 
 function validateElement(
 	element: ElementorElement,
@@ -28,6 +29,13 @@ function validateElement(
 		diagnostics.push({
 			code: 'elementor.missing-widget-type',
 			message: `Widget "${element.id}" has no widgetType.`,
+			severity: 'error',
+		});
+	}
+	if (element.widgetType && !supportedWidgets.has(element.widgetType)) {
+		diagnostics.push({
+			code: 'elementor.unsupported-widget',
+			message: `Widget type "${element.widgetType}" is not registered.`,
 			severity: 'error',
 		});
 	}
@@ -66,7 +74,36 @@ function validateElement(
 				severity: 'error',
 			});
 		}
+		const url =
+			image && typeof image === 'object' && 'url' in image
+				? image.url
+				: undefined;
+		if (typeof url !== 'string' || !/^(https?:|data:image\/)/.test(url)) {
+			diagnostics.push({
+				code: 'elementor.image-url-invalid',
+				message: `Image "${element.id}" requires an HTTP(S) or embedded image URL.`,
+				severity: 'error',
+			});
+		}
 	}
+	if (
+		element.widgetType === 'button' &&
+		typeof element.settings.text !== 'string'
+	)
+		diagnostics.push({
+			code: 'elementor.button-text-required',
+			message: `Button "${element.id}" requires text.`,
+			severity: 'error',
+		});
+	if (
+		element.widgetType === 'text-editor' &&
+		typeof element.settings.editor !== 'string'
+	)
+		diagnostics.push({
+			code: 'elementor.text-editor-content-required',
+			message: `Text Editor "${element.id}" requires editor content.`,
+			severity: 'error',
+		});
 
 	for (const child of element.elements) {
 		validateElement(child, seenIds, diagnostics);

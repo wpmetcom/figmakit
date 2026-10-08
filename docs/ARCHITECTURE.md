@@ -7,6 +7,8 @@
 
 **Product flow:** [UI_UX_FLOW.md](UI_UX_FLOW.md)
 
+**Figma authoring contract:** [figma/README.md](figma/README.md)
+
 ## Goals
 
 FigmaKit converts one Figma selection into four native WordPress targets:

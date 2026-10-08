@@ -2,6 +2,7 @@
 // It has access to the Figma API but no browser/DOM APIs
 
 import { makePostMessageSafe, serializeNode } from './serializer';
+import { resolveImageAssets } from './assets/resolveImageAssets';
 
 figma.showUI(__html__, { width: 440, height: 720, themeColors: true });
 
@@ -23,9 +24,11 @@ figma.ui.onmessage = async (msg) => {
 				return;
 			}
 
-			const nodes = makePostMessageSafe(
-				selection.map((node) => serializeNode(node))
+			const serializedNodes = selection.map((node) =>
+				serializeNode(node)
 			);
+			await resolveImageAssets(serializedNodes);
+			const nodes = makePostMessageSafe(serializedNodes);
 			console.log('nodes serialized in UI #2:', selection);
 
 			// Send back to UI

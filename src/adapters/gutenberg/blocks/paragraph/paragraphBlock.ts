@@ -21,7 +21,17 @@ export function createParagraphBlock(node: FigmaNode): GutenbergBlock {
 				typeof mapping.attributes.align === 'string'
 					? ` has-text-align-${mapping.attributes.align}`
 					: '';
-			return `<p${align ? ` class="${align.trim()}"` : ''}${style ? ` style="${style}"` : ''}>${richTextHtml(node).replace(/\n/g, '<br>')}</p>`;
+			const hasTextColor = Boolean(
+				(
+					mapping.attributes.style as
+						| { color?: { text?: string } }
+						| undefined
+				)?.color?.text
+			);
+			const classes = [align.trim(), hasTextColor ? 'has-text-color' : '']
+				.filter(Boolean)
+				.join(' ');
+			return `<p${classes ? ` class="${classes}"` : ''}${style ? ` style="${style}"` : ''}>${richTextHtml(node).replace(/\n/g, '<br>')}</p>`;
 		},
 	};
 }

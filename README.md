@@ -23,6 +23,8 @@ The detailed evidence, platform contracts, experiments, AI strategy, Material 3 
 
 The complete user journey, website connection, direct import, live publishing, verification, and rollback experience is defined in [docs/UI_UX_FLOW.md](docs/UI_UX_FLOW.md).
 
+Designers should prepare conversion-ready Figma files using the complete [Figma Authoring Guide](docs/figma/README.md), covering structure, semantic roles, Auto Layout, typography, assets, components, responsive references, variables, accessibility, and preflight checks.
+
 ## Initial launch scope
 
 ### Supported output targets

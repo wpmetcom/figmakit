@@ -49,21 +49,35 @@ export function createWidgetFromFigmaNode(
 }
 
 export function isButtonNode(node: FigmaNode): boolean {
+	const explicitRole = node.pluginData?.['figmakit:role'];
+	if (explicitRole) return explicitRole === 'button';
+	const visibleChildren =
+		node.children?.filter((child) => child.visible !== false) ?? [];
+	const frame = node.frame;
 	return (
 		['FRAME', 'GROUP', 'COMPONENT', 'INSTANCE'].includes(node.type) &&
-		/(button|btn|cta|browse|shop)/i.test(node.name ?? '') &&
-		Boolean(node.children?.some((child) => child.type === 'TEXT'))
+		visibleChildren.length === 1 &&
+		visibleChildren[0]?.type === 'TEXT' &&
+		Boolean(node.fills?.some((fill) => fill.type === 'SOLID')) &&
+		Boolean(
+			(frame?.paddingTop ?? node.paddingTop ?? 0) ||
+			(frame?.paddingLeft ?? node.paddingLeft ?? 0)
+		)
 	);
 }
 
 function isBodyText(node: FigmaNode): boolean {
+	const explicitRole = node.pluginData?.['figmakit:role'];
+	if (explicitRole)
+		return explicitRole === 'paragraph' || explicitRole === 'caption';
 	const fontSize =
 		typeof node.text?.fontSize === 'number'
 			? node.text.fontSize
 			: node.fontSize;
 	return (
-		/(paragraph|body|caption|description|copy)/i.test(node.name ?? '') ||
-		Boolean(fontSize && fontSize <= 18)
+		/(^|:)(paragraph|body|caption|description|copy)(:|$)/i.test(
+			node.name ?? ''
+		) || Boolean(fontSize && fontSize <= 18)
 	);
 }
 
@@ -73,5 +87,8 @@ export function hasImageFill(figmaNode: FigmaNode): boolean {
 
 export function extractImageUrl(figmaNode: FigmaNode): string {
 	const imageFill = figmaNode.fills?.find((fill) => fill.type === 'IMAGE');
-	return imageFill?.imageRef ?? '';
+	return (
+		imageFill?.imageRef ??
+		(imageFill?.imageHash ? `figma-asset://${imageFill.imageHash}` : '')
+	);
 }
